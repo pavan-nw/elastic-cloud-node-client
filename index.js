@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
+const searchRoute = require('./routes/search');
+const populateRoute = require('./routes/populate');
 
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
@@ -15,15 +17,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cookieParser());
 
 app.get('/', (req, res) => {
-  const elasticsearch = require('elasticsearch');
-  const client = new elasticsearch.Client({
-    host: 'http://localhost:9200/',
-  });
-  client
-    .search({ index: 'test' })
-    .then(results => res.json(results))
-    .catch(error => res.json(error));
+  console.log(req.path);
+  res.send('Elastic Cloud Client Running...!');
 });
+
+app.use('/search', searchRoute);
+app.use('/populate', populateRoute);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
